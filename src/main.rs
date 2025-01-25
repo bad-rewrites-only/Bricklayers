@@ -8,8 +8,8 @@ use regex::Regex;
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
 struct Cli {
-    #[arg(short, long)]
-    layer_height: f64,
+    // #[arg(short, long)]
+    // layer_height: f64,
     #[arg(short, long)]
     extrusion_multiplier: Option<f64>,
     file: PathBuf,
@@ -26,7 +26,7 @@ fn main() {
 
     let new_gcode = process(
         &gcode,
-        cli.layer_height,
+        // cli.layer_height,
         cli.extrusion_multiplier.unwrap_or(1.0),
     );
 
@@ -42,13 +42,27 @@ enum PerimeterType {
     None,
 }
 
-fn process(gcode: &str, layer_height: f64, extrusion_multiplier: f64) -> String {
+fn process(
+    gcode: &str,
+    // layer_height: f64,
+    extrusion_multiplier: f64,
+) -> String {
     let mut current_layer = 0;
     let mut current_z = 0f64;
     let mut perimeter_type = PerimeterType::None;
     let mut perimeter_block_count = 0;
     let mut inside_perimeter_block = false;
     let mut is_shifted = false;
+
+    let layer_height: f64 = gcode
+        .lines()
+        .find(|l| l.starts_with("; layer_height = "))
+        .unwrap()
+        .split_once('=')
+        .unwrap()
+        .1
+        .parse()
+        .unwrap();
     let z_shift = layer_height * 0.5;
     info!("Z-shift: {z_shift}mm, Layer height: {layer_height}mm");
 
