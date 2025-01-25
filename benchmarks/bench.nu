@@ -1,0 +1,1 @@
+for file in (ls original | get name) {hyperfine --prepare $"cp ($file) ." -- $"python ../bricklayers.py -layerHeight 0.35 ($file | path basename)" $"../target/release/bricklayers -o ($file | path basename) ($file)"}

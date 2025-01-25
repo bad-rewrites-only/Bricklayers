@@ -43,7 +43,7 @@ fn main() {
     let out_path = cli.output.unwrap_or(if cli.overwrite {
         cli.file
     } else {
-        cli.file.with_extension(".brickd.gcode")
+        cli.file.with_extension("brickd.gcode")
     });
     std::fs::write(&out_path, new_gcode).expect("could not write new gcode file");
     info!("Output file: {:?}", out_path)
@@ -72,7 +72,7 @@ fn process(
         .lines()
         .find(|l| l.starts_with("; layer_height = "))
         .unwrap()
-        .split_once('=')
+        .split_once("= ")
         .unwrap()
         .1
         .parse()
