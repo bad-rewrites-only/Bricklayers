@@ -4,6 +4,24 @@ This is a Rust version of [TengerTechnologies/Bricklayers](https://github.com/Te
 
 You'll need to have Cargo installed. [rustup.rs](https://rustup.rs)
 
+Install by cloning this repository and running `cargo install --path .` inside the repo.
+
+<!-- Alternatively, download a release for your platform from Releases. -->
+
+In your slicer, go to "Print Settings", "Output options", "Post-processing scripts", and add:
+
+For Linux / MacOS users,
+```
+/path/to/your/cargo/bindir/bricklayers
+```
+
+For Windows,
+```
+\path\to\your\cargo\bindir\bricklayers
+```
+
+You may optionally add the argument `--extrusion-multiplier`.
+
 <!-- To use it you need to have Python installed. (www.python.org) --> 
 
 <!-- In Prusaslicer's printsettings go to "Output options". There you will find a section called "Post processing scripts". --> 
