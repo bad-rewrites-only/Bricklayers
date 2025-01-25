@@ -5,16 +5,26 @@ use log::{debug, info};
 use once_cell::sync::Lazy;
 use regex::Regex;
 
+/// Add bricklayers to Prusa and Orca slicer gcode.
 #[derive(Parser)]
-#[command(version, about, long_about = None)]
+#[command(version, about, long_about)]
 struct Cli {
     // #[arg(short, long)]
     // layer_height: f64,
-    #[arg(short, long)]
-    extrusion_multiplier: Option<f64>,
+    /// Multiplies the extrusions of the shifted layers so you can use it to
+    /// probably increase strength (has yet to be tested).
+    #[arg(short, long, default_value_t = 1.0)]
+    extrusion_multiplier: f64,
     file: PathBuf,
+    /// File to write processed gcode to.
     #[arg(short, long)]
     output: Option<PathBuf>,
+    /// Set this to overwrite input file, useful for automatic post-processing
+    /// such as inside your slicer settings. Otherwise, this will create a new
+    /// file with an prepended extension `brickd`, or use your provided output
+    /// filename.
+    #[arg(short = 'w', long)]
+    overwrite: bool,
 }
 
 fn main() {
@@ -27,10 +37,14 @@ fn main() {
     let new_gcode = process(
         &gcode,
         // cli.layer_height,
-        cli.extrusion_multiplier.unwrap_or(1.0),
+        cli.extrusion_multiplier,
     );
 
-    let out_path = cli.output.unwrap_or(cli.file);
+    let out_path = cli.output.unwrap_or(if cli.overwrite {
+        cli.file
+    } else {
+        cli.file.with_extension(".brickd.gcode")
+    });
     std::fs::write(&out_path, new_gcode).expect("could not write new gcode file");
     info!("Output file: {:?}", out_path)
 }
