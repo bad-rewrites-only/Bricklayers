@@ -1,0 +1,53 @@
+name: release
+
+on:
+  release:
+    types:
+      - created
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: Install Linux and Windows Cross Compilers
+        run: sudo apt-get install --yes --no-install-recommends musl-tools gcc-mingw-w64-x86-64-win32
+
+      - name: Install rust nightly toolchain
+        run: rustup toolchain install nightly
+
+      - name: Install rustup targets
+        run: rustup target add --toolchain nightly x86_64-unknown-linux-musl x86_64-pc-windows-gnu
+
+      - name: Use nightly
+        run: rustup default nightly
+
+      - name: Build the executable
+        run: cargo build --release --target x86_64-unknown-linux-musl --target x86_64-pc-windows-gnu
+
+      - name: Tar linux x86_64 binary
+        run: tar -czvf bricklayers-gnu-linux-x86_64.tar.gz -C target/x86_64-unknown-linux-musl/release bricklayers
+
+      - name: Zip windows binary
+        run: zip -j bricklayers-windows.zip target/x86_64-pc-windows-gnu/release/bricklayers.exe
+
+      - name: Generate SHA256 checksums
+        run: |
+          shasum -a 256 bricklayers-gnu-linux-x86_64.tar.gz > bricklayers-gnu-linux-x86_64.tar.gz.sha256
+          shasum -a 256 bricklayers-windows.zip > bricklayers-windows.zip.sha256
+
+      - name: Upload release binaries
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            bricklayers-gnu-linux-x86_64.tar.gz
+            bricklayers-windows.zip
+            bricklayers-gnu-linux-x86_64.tar.gz.sha256
+            bricklayers-windows.zip.sha256
