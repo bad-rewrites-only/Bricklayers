@@ -27,4 +27,4 @@ Here is a video about the script.
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/EqRdQOoK5hc/0.jpg)](https://www.youtube.com/watch?v=EqRdQOoK5hc)
 
 Here are some benchmarks I ran on random gcode I had lying around:
-[![screenshot showing benchmark results](./benchmarks/20250125.png)]
+![screenshot showing benchmark results](./benchmarks/20250125.png)
