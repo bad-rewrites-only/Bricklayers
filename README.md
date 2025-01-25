@@ -23,4 +23,5 @@ For Windows,
 You may optionally add the argument `--extrusion-multiplier`. This multiplies the extrusions of the shifter layers to potentially increase strength (untested).
 
 Here is a video about the script.
+
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/EqRdQOoK5hc/0.jpg)](https://www.youtube.com/watch?v=EqRdQOoK5hc)
