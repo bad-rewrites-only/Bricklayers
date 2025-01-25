@@ -1,5 +1,3 @@
-#![feature(let_chains)]
-
 use std::{fs::read_to_string, path::PathBuf};
 
 use clap::Parser;
@@ -32,12 +30,9 @@ fn main() {
         cli.extrusion_multiplier.unwrap_or(1.0),
     );
 
-    std::fs::write(cli.output.clone().unwrap_or("rust.gcode".into()), new_gcode)
-        .expect("could not write new gcode file");
-    info!(
-        "Output file: {:?}",
-        cli.output.unwrap_or("rust.gcode".into())
-    )
+    let out_path = cli.output.unwrap_or(cli.file);
+    std::fs::write(&out_path, new_gcode).expect("could not write new gcode file");
+    info!("Output file: {:?}", out_path)
 }
 
 #[derive(PartialEq)]
